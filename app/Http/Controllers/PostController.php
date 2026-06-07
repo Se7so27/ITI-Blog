@@ -2,66 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
     public function index()
     {
-        // withTrashed() includes soft-deleted records so they show in the list
         $posts = Post::withTrashed()->latest()->paginate(10);
-        return view('posts.index', compact('posts'));
+        return Inertia::render('Posts/Index', [
+            'posts' => $posts,
+        ]);
     }
 
     public function create()
     {
-        return view('posts.create');
+        return Inertia::render('Posts/Create');
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([
-            'title' => 'required|min:3',
-            'body'  => 'required|min:10',
-        ], [
-            'title.required' => 'The post title is required.',
-            'title.min'      => 'Title must be at least 3 characters.',
-            'slug.required'=> 'The post slug is required.',
-            'slug.min'      => 'Slug must be at least 3 characters.',
-            'body.required'  => 'The post body is required.',
-            'body.min'       => 'Body must be at least 10 characters.',
+        Post::create([
+            ...$request->validated(),
+            'user_id' => auth()->id()
         ]);
-
-        Post::create($request->only(['title', 'body', 'slug']));
-
         return redirect()->route('posts.index')->with('success', 'Post created!');
     }
 
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
-        return view('posts.show', compact('post'));
+        $post->load(['comments.user', 'user']);
+        return Inertia::render('Posts/Show', [
+            'post' => $post,
+        ]);
     }
 
     public function edit(string $id)
     {
         $post = Post::findOrFail($id);
-        return view('posts.edit', compact('post'));
+        return Inertia::render('Posts/Edit', [
+            'post' => $post,
+        ]);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, string $id)
     {
         $post = Post::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|min:3',
-            'slug'  => 'required|min:3',
-            'body'  => 'required|min:10',
-        ]);
-
-        $post->update($request->only(['title', 'body']));
-
+        $post->update($request->validated());
         return redirect()->route('posts.index')->with('success', 'Post updated!');
     }
 
