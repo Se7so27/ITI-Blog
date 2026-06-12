@@ -24,16 +24,22 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        Post::create([
-            ...$request->validated(),
+        $post = Post::create([
+            ...$request->safe()->except('tags'),
             'user_id' => auth()->id()
         ]);
+
+        if ($request->filled('tags')) {
+            $post->attachTags(array_map('trim', explode(',', $request->input('tags'))));
+        }
+
         return redirect()->route('posts.index')->with('success', 'Post created!');
     }
 
     public function show(Post $post)
     {
-        $post->load(['comments.user', 'user']);
+        $post->load(['comments.user', 'user', 'tags']);
+        $post->tags->transform(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name]);
         return Inertia::render('Posts/Show', [
             'post' => $post,
         ]);
@@ -41,7 +47,8 @@ class PostController extends Controller
 
     public function edit(string $id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::with('tags')->findOrFail($id);
+        $post->tags->transform(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name]);
         return Inertia::render('Posts/Edit', [
             'post' => $post,
         ]);
@@ -50,7 +57,14 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, string $id)
     {
         $post = Post::findOrFail($id);
-        $post->update($request->validated());
+        $post->update($request->safe()->except('tags'));
+
+        if ($request->filled('tags')) {
+            $post->syncTags(array_map('trim', explode(',', $request->input('tags'))));
+        } else {
+            $post->detachTags($post->tags);
+        }
+
         return redirect()->route('posts.index')->with('success', 'Post updated!');
     }
 

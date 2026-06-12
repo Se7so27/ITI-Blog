@@ -8,6 +8,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 const form = useForm({
     title: '',
     body: '',
+    tags: '',
 })
 
 const submit = () => {
@@ -43,6 +44,17 @@ const submit = () => {
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                 />
                                 <InputError :message="form.errors.body" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="tags" value="Tags" />
+                                <TextInput
+                                    id="tags"
+                                    v-model="form.tags"
+                                    class="mt-1 block w-full"
+                                    placeholder="laravel, php, blog"
+                                />
+                                <InputError :message="form.errors.tags" class="mt-2" />
                             </div>
 
                             <div class="flex items-center gap-4">

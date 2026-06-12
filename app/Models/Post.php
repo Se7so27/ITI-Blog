@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Spatie\Tags\HasTags;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable;
+    use HasFactory, SoftDeletes, Sluggable, HasTags;
 
     protected $fillable = ['title', 'body', 'user_id']; // do NOT add 'slug' here
 

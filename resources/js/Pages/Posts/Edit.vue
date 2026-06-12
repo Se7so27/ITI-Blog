@@ -1,5 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import TextInput from '@/Components/TextInput.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -9,6 +12,7 @@ const props = defineProps({
 const form = useForm({
     title: props.post.title,
     body: props.post.body,
+    tags: props.post.tags?.map(t => t.name).join(', ') ?? '',
 })
 
 const submit = () => {
@@ -32,31 +36,36 @@ const submit = () => {
                     <div class="p-6 text-gray-900">
                         <form @submit.prevent="submit" class="space-y-6">
                             <div>
-                                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                                <input
+                                <InputLabel for="title" value="Title" />
+                                <TextInput
                                     id="title"
                                     v-model="form.title"
                                     type="text"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    :class="{ 'border-red-500 focus:border-red-500 focus:ring-red-500': form.errors.title }"
+                                    class="mt-1 block w-full"
                                 />
-                                <p v-if="form.errors.title" class="mt-1 text-sm text-red-600">
-                                    {{ form.errors.title }}
-                                </p>
+                                <InputError :message="form.errors.title" class="mt-2" />
                             </div>
 
                             <div>
-                                <label for="body" class="block text-sm font-medium text-gray-700">Body</label>
+                                <InputLabel for="body" value="Body" />
                                 <textarea
                                     id="body"
                                     v-model="form.body"
                                     rows="5"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    :class="{ 'border-red-500 focus:border-red-500 focus:ring-red-500': form.errors.body }"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                 ></textarea>
-                                <p v-if="form.errors.body" class="mt-1 text-sm text-red-600">
-                                    {{ form.errors.body }}
-                                </p>
+                                <InputError :message="form.errors.body" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="tags" value="Tags" />
+                                <TextInput
+                                    id="tags"
+                                    v-model="form.tags"
+                                    class="mt-1 block w-full"
+                                    placeholder="laravel, php, blog"
+                                />
+                                <InputError :message="form.errors.tags" class="mt-2" />
                             </div>
 
                             <div class="flex items-center gap-4">

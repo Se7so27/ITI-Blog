@@ -17,6 +17,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|min:3|max:255' . $this->route('post'),
             'body'  => 'required|min:10',
+            'tags'  => 'nullable|string',
         ];
     }
 
