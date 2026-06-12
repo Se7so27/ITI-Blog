@@ -16,4 +16,12 @@ class CommentController extends Controller
 
         return redirect()->back()->with('success', 'Comment added!');
     }
+
+    public function destroy(string $id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return redirect()->back()->with('success', 'Comment deleted!');
+    }
 }

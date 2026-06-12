@@ -95,6 +95,22 @@ const submit = () => {
                     Log in
                 </PrimaryButton>
             </div>
+
+            <div class="mt-6 flex flex-col gap-3">
+                <Link
+                    :href="route('register')"
+                    class="flex w-full items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                >
+                    Create an account
+                </Link>
+
+                <a
+                    :href="route('auth.github')"
+                    class="flex w-full items-center justify-center rounded-md bg-gray-800 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                >
+                    Login with GitHub
+                </a>
+            </div>
         </form>
     </GuestLayout>
 </template>

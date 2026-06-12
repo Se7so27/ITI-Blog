@@ -14,7 +14,7 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes, Sluggable, HasTags;
 
-    protected $fillable = ['title', 'body', 'user_id']; // do NOT add 'slug' here
+    protected $fillable = ['title', 'body', 'image', 'user_id']; // do NOT add 'slug' here
 
     public function sluggable(): array
     {

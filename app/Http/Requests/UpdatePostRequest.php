@@ -17,6 +17,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|min:3|max:255' . $this->route('post'),
             'body'  => 'required|min:10',
+            'image' => 'nullable|mimes:jpg,png|max:2048',
             'tags'  => 'nullable|string',
         ];
     }
@@ -29,6 +30,8 @@ class UpdatePostRequest extends FormRequest
             'title.max'      => 'Title may not exceed 255 characters.',
             'body.required'  => 'The post body is required.',
             'body.min'       => 'Body must be at least 10 characters.',
+            'image.mimes'    => 'Image must be a JPG or PNG file.',
+            'image.max'      => 'Image must not exceed 2MB.',
         ];
     }
 }

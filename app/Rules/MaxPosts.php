@@ -15,7 +15,7 @@ class MaxPosts implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (auth()->user()->posts()->count() >= 3) {
+        if (auth()->user()->posts()->count() >= 10) {
             $fail('You can only create up to 3 posts.');
         }
     }

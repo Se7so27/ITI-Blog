@@ -41,6 +41,14 @@ defineProps({
                             </div>
                         </div>
 
+                        <div v-if="post.image" class="mb-6">
+                            <img
+                                :src="`/storage/${post.image}`"
+                                class="w-full rounded-lg object-cover"
+                                :alt="post.title"
+                            />
+                        </div>
+
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <p class="text-gray-700 whitespace-pre-wrap">{{ post.body }}</p>
                         </div>
