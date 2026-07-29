@@ -8,10 +8,14 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 const form = useForm({
     title: '',
     body: '',
+    image: null,
+    tags: '',
 })
 
 const submit = () => {
-    form.post(route('posts.store'))
+    form.post(route('posts.store'), {
+        forceFormData: true,
+    })
 }
 </script>
 
@@ -43,6 +47,29 @@ const submit = () => {
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                 />
                                 <InputError :message="form.errors.body" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="image" value="Image" />
+                                <input
+                                    id="image"
+                                    type="file"
+                                    accept=".jpg,.png"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+                                    @input="form.image = $event.target.files[0]"
+                                />
+                                <InputError :message="form.errors.image" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="tags" value="Tags" />
+                                <TextInput
+                                    id="tags"
+                                    v-model="form.tags"
+                                    class="mt-1 block w-full"
+                                    placeholder="laravel, php, blog"
+                                />
+                                <InputError :message="form.errors.tags" class="mt-2" />
                             </div>
 
                             <div class="flex items-center gap-4">

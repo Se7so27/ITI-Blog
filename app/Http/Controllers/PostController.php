@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -24,16 +25,27 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        Post::create([
-            ...$request->validated(),
-            'user_id' => auth()->id()
-        ]);
+        $data = $request->safe()->except('tags', 'image');
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+
+        $data['user_id'] = auth()->id();
+
+        $post = Post::create($data);
+
+        if ($request->filled('tags')) {
+            $post->attachTags(array_map('trim', explode(',', $request->input('tags'))));
+        }
+
         return redirect()->route('posts.index')->with('success', 'Post created!');
     }
 
     public function show(Post $post)
     {
-        $post->load(['comments.user', 'user']);
+        $post->load(['comments.user', 'user', 'tags']);
+        $post->tags->transform(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name]);
         return Inertia::render('Posts/Show', [
             'post' => $post,
         ]);
@@ -41,7 +53,8 @@ class PostController extends Controller
 
     public function edit(string $id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::with('tags')->findOrFail($id);
+        $post->tags->transform(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name]);
         return Inertia::render('Posts/Edit', [
             'post' => $post,
         ]);
@@ -50,13 +63,38 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, string $id)
     {
         $post = Post::findOrFail($id);
-        $post->update($request->validated());
+        $this->authorize('update', $post);
+
+        $data = $request->safe()->except('tags', 'image');
+
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+
+        $post->update($data);
+
+        if ($request->filled('tags')) {
+            $post->syncTags(array_map('trim', explode(',', $request->input('tags'))));
+        } else {
+            $post->detachTags($post->tags);
+        }
+
         return redirect()->route('posts.index')->with('success', 'Post updated!');
     }
 
     public function destroy(string $id)
     {
-        Post::findOrFail($id)->delete();
+        $post = Post::findOrFail($id);
+        $this->authorize('delete', $post);
+
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
+
+        $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted!');
     }
 

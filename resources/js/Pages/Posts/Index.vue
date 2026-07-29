@@ -53,6 +53,7 @@ const formatDate = (dateString) => {
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Image</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Title</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Slug</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Created At</th>
@@ -61,7 +62,7 @@ const formatDate = (dateString) => {
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
                             <tr v-if="posts.data.length === 0">
-                                <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
                                     No posts found.
                                 </td>
                             </tr>
@@ -70,6 +71,14 @@ const formatDate = (dateString) => {
                                 :key="post.id"
                                 :class="{ 'bg-red-50': post.deleted_at }"
                             >
+                                <td class="px-6 py-4 text-sm">
+                                    <img
+                                        v-if="post.image"
+                                        :src="`/storage/${post.image}`"
+                                        class="h-10 w-10 rounded object-cover"
+                                        :alt="post.title"
+                                    />
+                                </td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                     {{ post.title }}
                                 </td>

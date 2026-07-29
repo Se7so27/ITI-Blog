@@ -30,8 +30,25 @@ defineProps({
                                 <span>&middot;</span>
                                 <span>Slug: {{ post.slug }}</span>
                             </div>
+                            <div v-if="post.tags?.length" class="mt-2 flex flex-wrap gap-2">
+                                <span
+                                    v-for="tag in post.tags"
+                                    :key="tag.id"
+                                    class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800"
+                                >
+                                    {{ tag.name }}
+                                </span>
+                            </div>
                         </div>
-                        
+
+                        <div v-if="post.image" class="mb-6">
+                            <img
+                                :src="`/storage/${post.image}`"
+                                class="w-full rounded-lg object-cover"
+                                :alt="post.title"
+                            />
+                        </div>
+
                         <div class="mt-6 border-t border-gray-200 pt-6">
                             <p class="text-gray-700 whitespace-pre-wrap">{{ post.body }}</p>
                         </div>
