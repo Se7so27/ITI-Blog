@@ -1,0 +1,6 @@
+TASK 3 - .env.example Audit
+=====================
+PASS: APP_NAME="ITI Blog"
+PASS: No 'APP_NAME=Laravel' remains
+NOTE: .env.example removed from .gitignore so it's tracked in repo
+

@@ -1,0 +1,7 @@
+TASK 2 - Composer.json Audit
+=====================
+PASS: name = 'se7so27/iti-blog'
+PASS: description = 'ITI Blog — A full-featured blog...'
+PASS: No 'laravel/laravel' remains
+PASS: Valid JSON
+

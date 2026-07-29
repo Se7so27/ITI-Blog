@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "se7so27/iti-blog",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "ITI Blog — A full-featured blog built with Laravel 12, Inertia + Vue 3, and Tailwind CSS.",
     "keywords": [
         "laravel",
         "framework"

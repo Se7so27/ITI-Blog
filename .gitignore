@@ -3,7 +3,7 @@
 .env
 .env.backup
 .env.production
-.env.example
+# .env.example is intentionally tracked for publishing
 .phpactor.json
 .phpunit.result.cache
 /.fleet
